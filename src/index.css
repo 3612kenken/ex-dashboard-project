@@ -323,6 +323,9 @@ h6 {
   --msc-yellow-dark: #f59f0b;
   --msc-indigo-lighter: #f3ebff;
 
+  --glass: rgba(255, 255, 255, 0.5);
+  --glass-glow: rgba(255, 255, 255, 0.1);
+
   --green: #2dce89;
   --blue: #5e72e4;
   --purple: #8965e0;
@@ -350,10 +353,27 @@ h6 {
   --darker: #000;
   --primary-gradient: linear-gradient(87deg, #5e72e4 0, #825ee4 100%);
   --secondary-gradient: linear-gradient(87deg, #8965e0 0, #825ee4 100%);
+  --tertiary-gradient: linear-gradient(87deg, #5e72e4 0, #825ee4 100%);
+  --msc-gradient: linear-gradient(87deg, #5f0f40 0, #e36414 100%);
+  --aurora-gradient: linear-gradient(
+    45deg,
+    hsla(0, 100%, 15%, 0.8),
+    hsla(352, 100%, 67%, 0.8)
+  );
 }
 
 body {
-  background-color: var(--neutral);
+  /* background: linear-gradient(
+      to bottom,
+      hsla(0, 71%, 11%, 0.8),
+      hsla(352, 50%, 14%, 0.8)
+    ),
+    url('./assets/images/bg-1.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: 0%;
+  background-attachment: fixed; */
+  background: var(--dark);
   /* font-size: calc(10px + 2vmin);
   margin: 0;
   display: flex;

@@ -5,16 +5,18 @@ function Links({ links, style }) {
   return (
     <div className={styles['menu-icon-container']}>
       {links.map((linkItem, index) => (
-        <Link key={index} to={linkItem.link}>
+        <>
           <div className={styles['css-jhjqlk']}>
-            <div className={styles['menu-icon']}>
-              <Icon>{linkItem.icon}</Icon>
-            </div>
+            <Link key={index} to={linkItem.link}>
+              <div className={styles['menu-icon']}>
+                <Icon fontSize='large'>{linkItem.icon}</Icon>
+              </div>
+            </Link>
             <div>
-              <span className={styles['menu-text']}>{linkItem.text}</span>
+              <p className={styles['menu-text']}> {linkItem.text}</p>
             </div>
           </div>
-        </Link>
+        </>
       ))}
     </div>
   );

@@ -15,10 +15,10 @@
   font-size: 2rem;
   font-weight: 700;
   text-align: center;
-  color: var(--dark);
+  color: var(--glass);
 }
 
 .sub-title {
-  color: var(--msc-orange);
+  color: var(--glass);
   margin-bottom: 1rem;
 }
