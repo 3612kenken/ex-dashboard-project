@@ -4,7 +4,9 @@ import Links from '../components/Links';
 function MainMenu() {
   return (
     <div className={styles.container}>
-      <h1 className={styles.title}>Executive Dashboard</h1>
+      <h1 className={styles.title}>
+        Executive <span className={styles['text-gradient']}>Dashboard</span>
+      </h1>
       <div>
         <div>
           <h3 className={styles['sub-title']}>Instruction Services</h3>
