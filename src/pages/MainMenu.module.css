@@ -23,24 +23,14 @@
   margin-bottom: 1rem;
 }
 
-.text-gradient {
-  background: linear-gradient(
-    45deg,
-    #ff0000,
-    #ff7300,
-    #fffb00,
-    #48ff00,
-    #00ffd5,
-    #002bff,
-    #7a00ff,
-    #ff00e7
-  );
+/* .text-gradient {
+  background: linear-gradient(45deg, #ff7300, #7a00ff, #ff00e7);
   background-size: 200%;
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
   animation: gradient 15s linear infinite;
-}
+} */
 
 @keyframes gradient {
   0% {

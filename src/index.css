@@ -323,7 +323,7 @@ h6 {
   --msc-yellow-dark: #f59f0b;
   --msc-indigo-lighter: #f3ebff;
 
-  --glass: rgba(255, 255, 255, 0.5);
+  --glass: rgba(255, 255, 255, 0.637);
   --glass-glow: rgba(255, 255, 255, 0.1);
 
   --green: #2dce89;
@@ -363,17 +363,13 @@ h6 {
 }
 
 body {
-  /* background: linear-gradient(
-      to bottom,
-      hsla(0, 71%, 11%, 0.8),
-      hsla(352, 50%, 14%, 0.8)
-    ),
-    url('./assets/images/bg-1.png');
+  background: linear-gradient(45deg, rgba(85, 1, 1, 0.85), rgba(0, 0, 0, 0.65)),
+    url('./assets/images/bg-2.png');
   background-repeat: no-repeat;
   background-size: cover;
   background-position: 0%;
-  background-attachment: fixed; */
-  background: var(--dark);
+  background-attachment: fixed;
+  background-blend-mode: darken;
   /* font-size: calc(10px + 2vmin);
   margin: 0;
   display: flex;

@@ -1,3 +1,11 @@
 .container {
-  background-color: var(--msc-orange);
+  padding: 2rem;
+  /* background-color: rgba(255, 255, 255, 0.1); */
+  /* backdrop-filter: blur(10px);
+  border-radius: 8px; */
+  /* border: 1px solid rgba(255, 255, 255, 0.1); */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 80dvh;
 }
