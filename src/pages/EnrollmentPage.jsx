@@ -19,6 +19,17 @@ function EnrollmentPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
 
+  const bgColor = [
+    '#003f5c',
+    '#2f4b7c',
+    '#665191',
+    '#a05195',
+    '#d45087',
+    '#f95d6a',
+    '#ff7c43',
+    '#ffa600',
+  ];
+
   useEffect(() => {
     setLoading(true);
     Promise.all([
@@ -69,9 +80,12 @@ function EnrollmentPage() {
         <p>Error :</p>
       ) : (
         <>
-          <h2 className='page-title '>Enrollment Profile</h2>
-          <Grid container maxWidth='xl' spacing={1}>
-            <Grid item md={6}>
+          <h2 className='page-title '>
+            Enrollment <span className='text-gradient'> Profile</span>
+          </h2>
+          <Grid container maxWidth='xl' spacing={2}>
+            <Grid item center xs={'auto'}>
+              <p className='page-label'>Yearly Enrollment Growth</p>
               <LineChart
                 data={{
                   labels: lineChartData.map((item) => item.year),
@@ -79,7 +93,7 @@ function EnrollmentPage() {
                     {
                       data: lineChartData.map((item) => item.enrollmentRate),
                       fill: false,
-                      backgroundColor: 'rgb(255, 99, 132)',
+                      backgroundColor: '#ffa600',
                       borderColor: 'rgba(255, 99, 132, 0.2)',
                       borderWidth: 8,
                     },
@@ -89,12 +103,12 @@ function EnrollmentPage() {
                   scales: {
                     x: {
                       ticks: {
-                        color: 'white',
+                        color: 'black',
                       },
                     },
                     y: {
                       ticks: {
-                        color: 'white',
+                        color: 'black',
                         fontSize: 14,
                       },
                     },
@@ -104,7 +118,7 @@ function EnrollmentPage() {
                       display: false,
                       text: 'Enrollment Rate by Year',
                       position: 'bottom',
-                      color: 'white',
+                      color: 'black',
                     },
                     legend: {
                       display: false,
@@ -112,10 +126,9 @@ function EnrollmentPage() {
                   },
                 }}
               />
-
-              <p className='page-label'>Enrollment Rate by Year</p>
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={'auto'}>
+              <p className='page-label'>Enrollment Rate by Branch</p>
               <BarChart
                 data={{
                   labels: barChartData.map((item) => item.branch),
@@ -124,14 +137,7 @@ function EnrollmentPage() {
                       labels: barChartData.map((item) => item.branch),
                       data: barChartData.map((item) => item.enrollmentRate),
                       fill: false,
-                      backgroundColor: [
-                        'rgba(255, 99, 132,0.5)',
-                        'rgba(54, 162, 235,0.5)',
-                        'rgba(255, 206, 86,0.5)',
-                        'rgba(75, 192, 192,0.5)',
-                        'rgba(153, 102, 255,0.5)',
-                        'rgba(255, 159, 64,0.5)',
-                      ],
+                      backgroundColor: bgColor,
                     },
                   ],
                 }}
@@ -139,12 +145,12 @@ function EnrollmentPage() {
                   scales: {
                     x: {
                       ticks: {
-                        color: 'white',
+                        color: 'black',
                       },
                     },
                     y: {
                       ticks: {
-                        color: 'white',
+                        color: 'black',
                         fontSize: 14,
                       },
                     },
@@ -155,7 +161,7 @@ function EnrollmentPage() {
                       display: false,
                       text: 'Enrollment Rate by Branch',
                       position: 'bottom',
-                      color: 'white',
+                      color: 'black',
                     },
                     legend: {
                       display: false,
@@ -163,9 +169,9 @@ function EnrollmentPage() {
                   },
                 }}
               />
-              <p className='page-label'>Enrollment Rate by Branch</p>
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={'auto'}>
+              <p className='page-label'>Enrollment Rate by Semester</p>
               <BarChart
                 data={{
                   labels: hbarChartData.map((item) => item.semester),
@@ -174,14 +180,7 @@ function EnrollmentPage() {
                       labels: hbarChartData.map((item) => item.semester),
                       data: hbarChartData.map((item) => item.enrollmentRate),
                       fill: false,
-                      backgroundColor: [
-                        'rgba(255, 99, 132,0.5)',
-                        'rgba(54, 162, 235,0.5)',
-                        'rgba(255, 206, 86,0.5)',
-                        'rgba(75, 192, 192,0.5)',
-                        'rgba(153, 102, 255,0.5)',
-                        'rgba(255, 159, 64,0.5)',
-                      ],
+                      backgroundColor: bgColor,
                     },
                   ],
                 }}
@@ -190,12 +189,12 @@ function EnrollmentPage() {
                   scales: {
                     x: {
                       ticks: {
-                        color: 'white',
+                        color: 'black',
                       },
                     },
                     y: {
                       ticks: {
-                        color: 'white',
+                        color: 'black',
                         fontSize: 14,
                       },
                     },
@@ -206,7 +205,7 @@ function EnrollmentPage() {
                       display: false,
                       text: 'Enrollment Rate by Semester',
                       position: 'bottom',
-                      color: 'white',
+                      color: 'black',
                     },
                     legend: {
                       display: false,
@@ -214,8 +213,8 @@ function EnrollmentPage() {
                   },
                 }}
               />
-              <p className='page-label'>Enrollment Rate by Semester</p>
             </Grid>
+            <Grid xs={3}></Grid>
             {/* <Table data={tableData} columns={columns} /> */}
           </Grid>
         </>

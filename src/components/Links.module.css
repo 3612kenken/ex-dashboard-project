@@ -9,19 +9,31 @@
 .menu-icon {
   cursor: pointer;
   padding: 2rem;
-  background-color: rgba(255, 255, 255, 0.1);
+  /* background-color: rgba(255, 255, 255, 0.1); */
+  background-color: var(--white);
   border-radius: 4px;
   transition: color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
-  color: var(--glass);
+  color: var(--gray-dark);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.menu-icon-primary {
+  background-color: var(--white);
+  color: var(--primary-dark);
+}
+
+.menu-icon-secondary {
+  background-color: var(--white);
+  color: var(--msc-red);
 }
 
 .menu-icon:hover,
 .menu-icon:focus {
   transform: scale(1.1);
-  filter: saturate(1.2);
-  box-shadow: 0 0 5px #ff0033, 0 0 10px #c20329, 0 0 15px #87041e;
+  /* box-shadow: 0 0 5px #ff0033, 0 0 10px #c20329, 0 0 15px #87041e; */
+  box-shadow: 1px 1px 4px hsla(27, 100%, 50%, 0.756),
+    0 0 8px hsla(269, 100%, 50%, 0.5), 0 0 12px hsla(306, 100%, 50%, 0.253);
 }
 
 .menu-icon-container {
@@ -31,7 +43,8 @@
 
 .menu-text {
   font-weight: 600;
-  color: var(--glass);
+  /* color: var(--glass); */
+  color: var(--gray);
   text-align: center;
   font-size: 12px;
   max-width: min-content;

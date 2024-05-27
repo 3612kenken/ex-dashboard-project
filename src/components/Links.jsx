@@ -8,7 +8,7 @@ function Links({ links, style }) {
         <>
           <div className={styles['css-jhjqlk']}>
             <Link key={index} to={linkItem.link}>
-              <div className={styles['menu-icon']}>
+              <div className={`${styles['menu-icon']}`}>
                 <Icon fontSize='large'>{linkItem.icon}</Icon>
               </div>
             </Link>
