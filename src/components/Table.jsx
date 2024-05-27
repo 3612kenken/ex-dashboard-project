@@ -5,12 +5,14 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import { Skeleton } from '@mui/material';
+import './Table.css';
 
 function TableComponent(props) {
   const { data, columns } = props;
 
   return (
-    <TableContainer component={Paper}>
+    <TableContainer className='table'>
       <Table>
         <TableHead>
           <TableRow>
@@ -23,7 +25,9 @@ function TableComponent(props) {
           {data.map((row) => (
             <TableRow key={row.id}>
               {columns.map((column) => (
-                <TableCell key={column.field}>{row[column.field]}</TableCell>
+                <TableCell key={column.field}>
+                  {row[column.field] || <Skeleton />}
+                </TableCell>
               ))}
             </TableRow>
           ))}

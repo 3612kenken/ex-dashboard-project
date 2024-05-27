@@ -4,3 +4,22 @@
   display: flex;
   flex-direction: column;
 }
+
+.page-title {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  text-align: center;
+  color: var(--glass);
+}
+
+* + * {
+  margin-bottom: 1rem;
+}
+
+.page-label {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--glass);
+  margin-top: 1rem;
+}
