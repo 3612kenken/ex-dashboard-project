@@ -17,14 +17,11 @@
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.menu-icon:hover {
+.menu-icon:hover,
+.menu-icon:focus {
   transform: scale(1.1);
-  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1) 1px 1px 5px rgba(0, 0, 0, 0.1);
   filter: saturate(1.2);
-}
-
-menu-text:hover {
-  color: var(--msc-red);
+  box-shadow: 0 0 5px #ff0033, 0 0 10px #c20329, 0 0 15px #87041e;
 }
 
 .menu-icon-container {
