@@ -1,0 +1,24 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: 100%;
+  /* height: 100svh; */
+}
+
+/* Kevin Powell's uniform margin selector */
+* + * > * {
+  margin-top: 1rem;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 700;
+  text-align: center;
+  color: var(--dark);
+}
+
+.sub-title {
+  color: var(--msc-orange);
+  margin-bottom: 1rem;
+}

@@ -1,0 +1,44 @@
+.menu-icon,
+.menu-icon-container,
+.css-jhjqlk {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.menu-icon {
+  transition: color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+.menu-icon:hover {
+  color: var(--msc-red);
+  transform: scale(1.1);
+  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
+}
+
+.menu-icon-container {
+  gap: 1rem;
+  max-width: fit-content;
+}
+
+.menu-text,
+a {
+  font-weight: 600;
+  color: var(--msc-indigo);
+  text-decoration: none;
+  text-align: center;
+  font-size: 12px;
+}
+
+.css-jhjqlk {
+  flex-direction: flex;
+  flex-direction: column;
+  background-color: var(--white);
+  gap: 0.5rem;
+  padding: 1rem;
+  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
+}
+
+@media screen and (min-width: 768px) {
+}
