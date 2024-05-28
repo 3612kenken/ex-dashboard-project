@@ -121,6 +121,12 @@ function EnrollmentPage() {
     };
   });
 
+  // datasets.sort((a, b) => {
+  //   const totalA = a.data.reduce((sum, value) => sum + value, 0);
+  //   const totalB = b.data.reduce((sum, value) => sum + value, 0);
+  //   return totalB - totalA;
+  // });
+
   const labels = stackedData
     .map((item) => item.branch)
     .filter((value, index, self) => self.indexOf(value) === index);
