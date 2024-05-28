@@ -79,7 +79,7 @@ function ProgramOfferingPage() {
     return {
       label: program,
       data: Object.values(groupedData[program]),
-      backgroundColor: bgColor[index], // bgColor is an array of colors
+      backgroundColor: bgColor[index],
     };
   });
 
@@ -98,86 +98,98 @@ function ProgramOfferingPage() {
         <p>Error: {error.message}</p>
       ) : (
         <Grid container spacing={1}>
-          <Grid item xs={5}>
-            <div style={{ height: '400 px' }}>
-              <BarChart
-                data={{
-                  labels: tableData.map((data) => data.year),
-                  datasets: [
-                    {
-                      label: 'Number of Programs',
-                      data: tableData.map((data) => data.count),
-                      backgroundColor: bgColor,
-                    },
-                  ],
-                }}
-                options={{
-                  scales: {
-                    y: {
-                      beginAtZero: true,
-                    },
+          <Grid item xs={4}>
+            <BarChart
+              data={{
+                labels: tableData.map((data) => data.year),
+                datasets: [
+                  {
+                    label: 'Number of Programs',
+                    data: tableData.map((data) => data.count),
+                    backgroundColor: bgColor,
                   },
-                  indexAxis: 'y',
-                  plugins: {
-                    legend: {
-                      display: true,
-                      position: 'bottom',
-                    },
+                ],
+              }}
+              options={{
+                scales: {
+                  y: {
+                    beginAtZero: true,
                   },
-                }}
-                bgColor={bgColor}
-              />
-            </div>
+                },
+                indexAxis: 'y',
+                plugins: {
+                  legend: {
+                    display: false,
+                    position: 'bottom',
+                  },
+                  title: {
+                    display: true,
+                    text: 'Lorem Ipsum Dolor Sit Amet',
+                  },
+                },
+              }}
+              bgColor={bgColor}
+            />
           </Grid>
-          <Grid item xs={5}>
-            <div style={{ height: '400px' }}>
-              <BarChart
-                data={{
-                  labels: labels,
-                  datasets: datasets,
-                }}
-                options={{
-                  scales: {
-                    x: {
-                      stacked: true,
-                    },
-                    y: {
-                      stacked: true,
-                    },
+          <Grid item xs={4}>
+            <BarChart
+              data={{
+                labels: labels,
+                datasets: datasets,
+              }}
+              options={{
+                scales: {
+                  x: {
+                    stacked: true,
                   },
-                  indexAxis: 'y',
-                }}
-              />
-            </div>
+                  y: {
+                    stacked: true,
+                  },
+                },
+                plugins: {
+                  legend: {
+                    display: false,
+                    position: 'bottom',
+                  },
+                  title: {
+                    display: true,
+                    text: 'Lorem Ipsum Dolor Sit Amet',
+                  },
+                },
+                indexAxis: 'y',
+              }}
+            />
           </Grid>
           <Grid item xs={2}>
-            <div style={{ height: '400px' }}>
-              <PieChart
-                data={{
-                  labels: pieData.map((data) =>
-                    data.type
-                      .split(' ')
-                      .map((word) => word[0].toUpperCase() + word.slice(1))
-                      .join('')
-                  ),
-                  datasets: [
-                    {
-                      data: pieData.map((data) => data.count),
-                      backgroundColor: bgColor,
-                    },
-                  ],
-                }}
-                options={{
-                  plugins: {
-                    legend: {
-                      display: true,
-                      position: 'top',
-                    },
+            <PieChart
+              data={{
+                labels: pieData.map((data) =>
+                  data.type
+                    .split(' ')
+                    .map((word) => word[0].toUpperCase() + word.slice(1))
+                    .join('')
+                ),
+                datasets: [
+                  {
+                    data: pieData.map((data) => data.count),
+                    backgroundColor: bgColor,
                   },
-                }}
-                bgColor={bgColor}
-              />
-            </div>
+                ],
+              }}
+              options={{
+                plugins: {
+                  legend: {
+                    display: false,
+                    position: 'top',
+                  },
+                  title: {
+                    display: true,
+                    text: 'Lorem Ipsum Dolor Sit Amet',
+                  },
+                },
+              }}
+              bgColor={bgColor}
+            />
           </Grid>
         </Grid>
       )}
