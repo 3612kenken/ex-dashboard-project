@@ -1,14 +1,16 @@
 import { Link } from 'react-router-dom';
 import styles from './Links.module.css';
 import Icon from '@mui/material/Icon';
-function Links({ links, style }) {
+function Links({ links }) {
   return (
     <div className={styles['menu-icon-container']}>
       {links.map((linkItem, index) => (
         <>
           <div className={styles['css-jhjqlk']}>
             <Link key={index} to={linkItem.link}>
-              <div className={`${styles['menu-icon']}`}>
+              <div
+                className={`${styles['menu-icon']} ${styles[linkItem.style]}`}
+              >
                 <Icon fontSize='large'>{linkItem.icon}</Icon>
               </div>
             </Link>
