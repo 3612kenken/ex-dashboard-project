@@ -1,11 +1,8 @@
-import BarChart from '../components/BarChart';
-import LineChart from '../components/LineChart';
 import Grid from '@mui/material/Grid';
-import PieChart from '../components/PieChart';
 import { getQuery } from '../Queries/Queries';
 import { useEffect, useState, useMemo } from 'react';
-import { layouts } from 'chart.js';
-import { idID } from '@mui/material/locale';
+import { BarChart, PieChart, LineChart } from '../components/Charts';
+import Spinner from '../components/Spinner';
 
 function ProgramOfferingPage() {
   const [tableData, setTableData] = useState([]);
@@ -93,103 +90,121 @@ function ProgramOfferingPage() {
         <span className='text-gradient'>Profile</span> of Academic Programs
       </h1>
       {loading ? (
-        <p>Loading...</p>
+        <Spinner />
       ) : error ? (
         <p>Error: {error.message}</p>
       ) : (
         <Grid container spacing={1}>
           <Grid item xs={4}>
-            <BarChart
-              data={{
-                labels: tableData.map((data) => data.year),
-                datasets: [
-                  {
-                    label: 'Number of Programs',
-                    data: tableData.map((data) => data.count),
-                    backgroundColor: bgColor,
+            {loading ? (
+              <Spinner />
+            ) : error ? (
+              <p>Error: {error.message}</p>
+            ) : (
+              <BarChart
+                data={{
+                  labels: tableData.map((data) => data.year),
+                  datasets: [
+                    {
+                      label: 'Number of Programs',
+                      data: tableData.map((data) => data.count),
+                      backgroundColor: bgColor,
+                    },
+                  ],
+                }}
+                options={{
+                  scales: {
+                    y: {
+                      beginAtZero: true,
+                    },
                   },
-                ],
-              }}
-              options={{
-                scales: {
-                  y: {
-                    beginAtZero: true,
+                  indexAxis: 'y',
+                  plugins: {
+                    legend: {
+                      display: false,
+                      position: 'bottom',
+                    },
+                    title: {
+                      display: true,
+                      text: 'Lorem Ipsum Dolor Sit Amet',
+                    },
                   },
-                },
-                indexAxis: 'y',
-                plugins: {
-                  legend: {
-                    display: false,
-                    position: 'bottom',
-                  },
-                  title: {
-                    display: true,
-                    text: 'Lorem Ipsum Dolor Sit Amet',
-                  },
-                },
-              }}
-              bgColor={bgColor}
-            />
+                }}
+                bgColor={bgColor}
+              />
+            )}
           </Grid>
           <Grid item xs={4}>
-            <BarChart
-              data={{
-                labels: labels,
-                datasets: datasets,
-              }}
-              options={{
-                scales: {
-                  x: {
-                    stacked: true,
+            {loading ? (
+              <Spinner />
+            ) : error ? (
+              <p>Error: {error.message}</p>
+            ) : (
+              <BarChart
+                data={{
+                  labels: labels,
+                  datasets: datasets,
+                }}
+                options={{
+                  scales: {
+                    x: {
+                      stacked: true,
+                    },
+                    y: {
+                      stacked: true,
+                    },
                   },
-                  y: {
-                    stacked: true,
+                  plugins: {
+                    legend: {
+                      display: false,
+                      position: 'bottom',
+                    },
+                    title: {
+                      display: true,
+                      text: 'Lorem Ipsum Dolor Sit Amet',
+                    },
                   },
-                },
-                plugins: {
-                  legend: {
-                    display: false,
-                    position: 'bottom',
-                  },
-                  title: {
-                    display: true,
-                    text: 'Lorem Ipsum Dolor Sit Amet',
-                  },
-                },
-                indexAxis: 'y',
-              }}
-            />
+                  indexAxis: 'y',
+                }}
+              />
+            )}
           </Grid>
           <Grid item xs={2}>
-            <PieChart
-              data={{
-                labels: pieData.map((data) =>
-                  data.type
-                    .split(' ')
-                    .map((word) => word[0].toUpperCase() + word.slice(1))
-                    .join('')
-                ),
-                datasets: [
-                  {
-                    data: pieData.map((data) => data.count),
-                    backgroundColor: bgColor,
+            {loading ? (
+              <Spinner />
+            ) : error ? (
+              <p>Error: {error.message}</p>
+            ) : (
+              <PieChart
+                data={{
+                  labels: pieData.map((data) =>
+                    data.type
+                      .split(' ')
+                      .map((word) => word[0].toUpperCase() + word.slice(1))
+                      .join('')
+                  ),
+                  datasets: [
+                    {
+                      data: pieData.map((data) => data.count),
+                      backgroundColor: bgColor,
+                    },
+                  ],
+                }}
+                options={{
+                  plugins: {
+                    legend: {
+                      display: false,
+                      position: 'top',
+                    },
+                    title: {
+                      display: true,
+                      text: 'Lorem Ipsum Dolor Sit Amet',
+                    },
                   },
-                ],
-              }}
-              options={{
-                plugins: {
-                  legend: {
-                    display: false,
-                    position: 'top',
-                  },
-                  title: {
-                    display: true,
-                    text: 'Lorem Ipsum Dolor Sit Amet',
-                  },
-                },
-              }}
-              bgColor={bgColor}
-            />
+                }}
+                bgColor={bgColor}
+              />
+            )}
           </Grid>
         </Grid>
       )}

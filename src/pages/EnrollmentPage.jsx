@@ -1,9 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import Table from '../components/Table';
-import LineChart from '../components/LineChart';
-import BarChart from '../components/BarChart';
-import PieChart from '../components/PieChart';
-import ColumChart from '../components/ColumnChart';
+import { LineChart, BarChart, PieChart } from '../components/Charts';
+import Spinner from '../components/Spinner';
 import Grid from '@mui/material/Grid';
 import Container from '@mui/material/Container';
 import { getQuery } from '../Queries/Queries';
@@ -77,14 +75,31 @@ function EnrollmentPage() {
       .finally(() => setLoading(false));
   }, []);
 
-  console.log(stackedData);
-
   const columns = [
     { field: 'year', headerName: 'Year' },
     { field: 'branch', headerName: 'Branch' },
     { field: 'semester', headerName: 'Semester' },
     { field: 'enrollmentRate', headerName: 'Enrollment Rate' },
   ];
+
+  // const groupedData = stackedData.reduce((acc, cur) => {
+  //   if (!acc[cur.year]) {
+  //     acc[cur.year] = {};
+  //   }
+  //   if (!acc[cur.year][cur.branch]) {
+  //     acc[cur.year][cur.branch] = 0;
+  //   }
+  //   acc[cur.year][cur.branch] += cur.enrollmentRate;
+  //   return acc;
+  // }, {});
+
+  // const datasets = Object.keys(groupedData).map((year, index) => {
+  //   return {
+  //     label: year,
+  //     data: Object.values(groupedData[year]),
+  //     backgroundColor: bgColor[index], // bgColor is an array of colors
+  //   };
+  // });
 
   const groupedData = stackedData.reduce((acc, cur) => {
     if (!acc[cur.year]) {
@@ -101,7 +116,8 @@ function EnrollmentPage() {
     return {
       label: year,
       data: Object.values(groupedData[year]),
-      backgroundColor: bgColor[index], // bgColor is an array of colors
+      branches: Object.keys(groupedData[year]),
+      backgroundColor: bgColor[index],
     };
   });
 
@@ -116,10 +132,10 @@ function EnrollmentPage() {
       </h2>
       {loading ? (
         <>
-          <p>Loading...</p>
+          <Spinner />
         </>
       ) : error ? (
-        <p>Error:error</p>
+        <p>Error:{error.message}</p>
       ) : (
         <>
           <Grid container spacing={1} className='mb-1'>
@@ -168,13 +184,15 @@ function EnrollmentPage() {
               />
             </Grid>
             <Grid item xs={6}>
-              <p className='page-label'>Enrollment by Campus</p>
+              <p className='page-label'>
+                Total Enrollment Distribution by Campus
+              </p>
               <BarChart
                 data={{
-                  labels: barChartData.map((item) => item.branch),
+                  labels: labels,
                   datasets: [
                     {
-                      labels: barChartData.map((item) => item.branch),
+                      label: 'count',
                       data: barChartData.map((item) => item.enrollmentRate),
                       fill: false,
                       backgroundColor: bgColor,
@@ -205,14 +223,15 @@ function EnrollmentPage() {
                     },
                     legend: {
                       display: false,
+                      position: 'bottom',
                     },
                   },
                 }}
               />
             </Grid>
             <Grid item xs={6}>
-              <p className='page-label'>Enrollment by Semester</p>
-              <ColumChart
+              <p className='page-label'>Year-over-Year Enrollment Growth</p>
+              <BarChart
                 data={{
                   labels: labels,
                   datasets: datasets,
@@ -220,23 +239,23 @@ function EnrollmentPage() {
                 options={{
                   scales: {
                     x: {
-                      stacked: true,
+                      stacked: false,
                     },
                     y: {
-                      stacked: true,
+                      stacked: false,
                     },
                   },
                   plugins: {
                     legend: {
-                      display: false,
+                      display: true,
                       position: 'bottom',
                     },
                     title: {
-                      display: true,
+                      display: false,
                       text: 'Yearly Enrollment by Semester',
                     },
                   },
-                  indexAxis: 'y',
+                  indexAxis: 'x',
                 }}
               />
             </Grid>

@@ -5,10 +5,10 @@ export function LineChart({ data, options, styles }) {
   return <Chart data={data} options={options} type='line' className={styles} />;
 }
 
-export function BarChart({ data, options }) {
+export function BarChart({ data, options, styles }) {
   return <Chart data={data} options={options} type='bar' className={styles} />;
 }
 
-export function PieChart({ data, options }) {
+export function PieChart({ data, options, styles }) {
   return <Chart data={data} options={options} type='pie' className={styles} />;
 }
