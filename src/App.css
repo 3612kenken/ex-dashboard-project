@@ -49,3 +49,11 @@
   margin-bottom: 1rem;
   text-align: center;
 }
+.adaptive-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  grid-auto-rows: auto; /* New property */
+  grid-gap: 1rem;
+  justify-content: center;
+  align-items: start; /* Align items to start on cross axis */
+}

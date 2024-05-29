@@ -3,7 +3,6 @@ import Table from '../components/Table';
 import { LineChart, BarChart, PieChart } from '../components/Charts';
 import Spinner from '../components/Spinner';
 import Grid from '@mui/material/Grid';
-import Container from '@mui/material/Container';
 import { getQuery } from '../Queries/Queries';
 import './EnrollmentPage.css';
 
@@ -121,12 +120,6 @@ function EnrollmentPage() {
     };
   });
 
-  // datasets.sort((a, b) => {
-  //   const totalA = a.data.reduce((sum, value) => sum + value, 0);
-  //   const totalB = b.data.reduce((sum, value) => sum + value, 0);
-  //   return totalB - totalA;
-  // });
-
   const labels = stackedData
     .map((item) => item.branch)
     .filter((value, index, self) => self.indexOf(value) === index);
@@ -146,7 +139,7 @@ function EnrollmentPage() {
         <>
           <Grid container spacing={1} className='mb-1'>
             <Grid item center xs={12}>
-              <p className='page-label'>Total Enrollment Overtime</p>
+              {/* <p className='page-label'>Total Enrollment Overtime</p> */}
               <LineChart
                 data={{
                   labels: lineChartData.map((item) => item.year),
@@ -176,8 +169,8 @@ function EnrollmentPage() {
                   },
                   plugins: {
                     title: {
-                      display: false,
-                      text: 'Enrollment Rate by Year',
+                      display: true,
+                      text: 'Total Enrollment Overtime',
                       position: 'bottom',
                       color: 'black',
                     },
@@ -190,9 +183,9 @@ function EnrollmentPage() {
               />
             </Grid>
             <Grid item xs={6}>
-              <p className='page-label'>
+              {/* <p className='page-label'>
                 Total Enrollment Distribution by Campus
-              </p>
+              </p> */}
               <BarChart
                 data={{
                   labels: labels,
@@ -222,10 +215,9 @@ function EnrollmentPage() {
 
                   plugins: {
                     title: {
-                      display: false,
-                      text: 'Enrollment Rate by Branch',
+                      display: true,
+                      text: '    Total Enrollment Distribution by Campus',
                       position: 'bottom',
-                      color: 'black',
                     },
                     legend: {
                       display: false,
@@ -236,7 +228,7 @@ function EnrollmentPage() {
               />
             </Grid>
             <Grid item xs={6}>
-              <p className='page-label'>Year-over-Year Enrollment Growth</p>
+              {/* <p className='page-label'>Year-over-Year Enrollment Growth</p> */}
               <BarChart
                 data={{
                   labels: labels,
@@ -254,11 +246,12 @@ function EnrollmentPage() {
                   plugins: {
                     legend: {
                       display: true,
-                      position: 'bottom',
+                      position: 'right',
                     },
                     title: {
-                      display: false,
-                      text: 'Yearly Enrollment by Semester',
+                      display: true,
+                      text: 'Year-over-Year Enrollment Growth',
+                      position: 'bottom',
                     },
                   },
                   indexAxis: 'x',
@@ -270,9 +263,9 @@ function EnrollmentPage() {
               </Grid> */}
           </Grid>
 
-          <h3 className='page-subtitle '>
+          {/* <h3 className='page-subtitle '>
             Lorem <span className='text-gradient'> Ipsum</span>
-          </h3>
+          </h3> */}
         </>
       )}
     </div>

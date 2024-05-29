@@ -3,6 +3,8 @@ import { getQuery } from '../Queries/Queries';
 import { useEffect, useState, useMemo } from 'react';
 import { BarChart, PieChart, LineChart } from '../components/Charts';
 import Spinner from '../components/Spinner';
+import { plugins, scales } from 'chart.js';
+import { BorderColor } from '@mui/icons-material';
 
 function ProgramOfferingPage() {
   const [tableData, setTableData] = useState([]);
@@ -61,28 +63,54 @@ function ProgramOfferingPage() {
       .finally(() => setLoading(false));
   }, []);
 
+  console.log(stackedData);
+
   const groupedData = stackedData.reduce((acc, cur) => {
-    if (!acc[cur.program]) {
-      acc[cur.program] = {};
+    if (!acc[cur.category]) {
+      acc[cur.category] = {};
     }
-    if (!acc[cur.program][cur.category]) {
-      acc[cur.program][cur.category] = 0;
+    if (!acc[cur.category][cur.year]) {
+      acc[cur.category][cur.year] = 0;
     }
-    acc[cur.program][cur.category] += cur.accreditationCount;
+    acc[cur.category][cur.year] += cur.accreditationCount;
     return acc;
   }, {});
 
-  const datasets = Object.keys(groupedData).map((program, index) => {
+  const datasets = Object.keys(groupedData).map((category, index) => {
     return {
-      label: program,
-      data: Object.values(groupedData[program]),
+      label: category,
+      data: Object.values(groupedData[category]),
       backgroundColor: bgColor[index],
     };
   });
 
   const labels = stackedData
-    .map((item) => item.category)
+    .map((item) => item.year)
     .filter((value, index, self) => self.indexOf(value) === index);
+
+  // const trendData = stackedData.reduce((acc, cur) => {
+  //   if (!acc[cur.program]) {
+  //     acc[cur.program] = {};
+  //   }
+  //   if (!acc[cur.program][cur.year]) {
+  //     acc[cur.program][cur.year] = 0;
+  //   }
+  //   acc[cur.program][cur.year] += cur.enrollmentRate;
+  //   return acc;
+  // }, {});
+
+  // const trendDS = Object.keys(trendData).map((program, index) => {
+  //   return {
+  //     label: program,
+  //     data: Object.values(trendData[program]),
+  //     branches: Object.keys(trendData[program]),
+  //     backgroundColor: bgColor[index],
+  //   };
+  // });
+
+  // const trendLabels = trendData
+  //   .map((item) => item.year)
+  //   .filter((value, index, self) => self.indexOf(value) === index);
 
   return (
     <div>
@@ -94,119 +122,218 @@ function ProgramOfferingPage() {
       ) : error ? (
         <p>Error: {error.message}</p>
       ) : (
-        <Grid container spacing={1}>
-          <Grid item xs={4}>
-            {loading ? (
-              <Spinner />
-            ) : error ? (
-              <p>Error: {error.message}</p>
-            ) : (
-              <BarChart
-                data={{
-                  labels: tableData.map((data) => data.year),
-                  datasets: [
-                    {
-                      label: 'Number of Programs',
-                      data: tableData.map((data) => data.count),
-                      backgroundColor: bgColor,
+        <div>
+          <Grid container spacing={2} margin={1}>
+            <Grid item xs={12}>
+              {loading ? (
+                <Spinner />
+              ) : error ? (
+                <p>Error: {error.message}</p>
+              ) : (
+                <BarChart
+                  data={{
+                    labels: labels,
+                    datasets: datasets,
+                  }}
+                  options={{
+                    scales: {
+                      x: {
+                        stacked: false,
+                      },
+                      y: {
+                        stacked: false,
+                      },
                     },
-                  ],
-                }}
-                options={{
-                  scales: {
-                    y: {
-                      beginAtZero: true,
+                    plugins: {
+                      legend: {
+                        display: true,
+                        position: 'right',
+                      },
+                      title: {
+                        display: true,
+                        text: 'Programs by Accreditation Status',
+                      },
                     },
-                  },
-                  indexAxis: 'y',
-                  plugins: {
-                    legend: {
-                      display: false,
-                      position: 'bottom',
+                    indexAxis: 'x',
+                  }}
+                />
+              )}
+            </Grid>
+            <Grid item xs={4}>
+              {loading ? (
+                <Spinner />
+              ) : error ? (
+                <p>Error: {error.message}</p>
+              ) : (
+                <>
+                  <PieChart
+                    data={{
+                      labels: pieData.map((data) =>
+                        data.type
+                          .split(' ')
+                          .map((word) => word[0].toUpperCase() + word.slice(1))
+                          .join('')
+                      ),
+                      datasets: [
+                        {
+                          data: pieData.map((data) => data.count),
+                          backgroundColor: bgColor,
+                        },
+                      ],
+                    }}
+                    options={{
+                      plugins: {
+                        legend: {
+                          display: false,
+                          position: 'top',
+                        },
+                        title: {
+                          display: true,
+                          text: 'Programs by Degree Level',
+                        },
+                      },
+                    }}
+                    bgColor={bgColor}
+                  />
+                </>
+              )}
+            </Grid>
+            <Grid item xs={8}>
+              {loading ? (
+                <Spinner />
+              ) : error ? (
+                <p>Error: {error.message}</p>
+              ) : (
+                <BarChart
+                  data={{
+                    labels: tableData.map((data) => data.year),
+                    datasets: [
+                      {
+                        label: 'Number of Programs',
+                        data: tableData.map((data) => data.count),
+                        backgroundColor: bgColor,
+                      },
+                    ],
+                  }}
+                  options={{
+                    scales: {
+                      y: {
+                        beginAtZero: true,
+                      },
                     },
-                    title: {
-                      display: true,
-                      text: 'Lorem Ipsum Dolor Sit Amet',
+                    indexAxis: 'y',
+                    plugins: {
+                      legend: {
+                        display: false,
+                        position: 'bottom',
+                      },
+                      title: {
+                        display: true,
+                        text: 'Growth in Program Offerings Over Time',
+                      },
                     },
-                  },
-                }}
-                bgColor={bgColor}
-              />
-            )}
+                  }}
+                  bgColor={bgColor}
+                />
+              )}
+            </Grid>
+
+            <Grid>
+              <Grid>
+                {loading ? (
+                  <Spinner />
+                ) : error ? (
+                  <p>Error: {error.message}</p>
+                ) : (
+                  <>
+                    {/* <LineChart
+                    data={{
+                      labels: labels,
+                      datasets: datasets,
+                    }}
+                  /> */}
+                  </>
+                )}
+              </Grid>
+            </Grid>
           </Grid>
-          <Grid item xs={4}>
-            {loading ? (
-              <Spinner />
-            ) : error ? (
-              <p>Error: {error.message}</p>
-            ) : (
-              <BarChart
-                data={{
-                  labels: labels,
-                  datasets: datasets,
-                }}
-                options={{
-                  scales: {
-                    x: {
-                      stacked: true,
+          <Grid container spacing={1} margin={1}>
+            <Grid item xs={6} md={8}>
+              {loading ? (
+                <Spinner />
+              ) : error ? (
+                <p>Error: {error.message}</p>
+              ) : (
+                <BarChart
+                  data={{
+                    labels: tableData.map((data) => data.year),
+                    datasets: [
+                      {
+                        label: 'Number of Programs',
+                        data: tableData.map((data) => data.count),
+                        backgroundColor: bgColor,
+                      },
+                    ],
+                  }}
+                  options={{
+                    scales: {
+                      y: {
+                        beginAtZero: true,
+                      },
                     },
-                    y: {
-                      stacked: true,
+                    indexAxis: 'y',
+                    plugins: {
+                      legend: {
+                        display: false,
+                        position: 'bottom',
+                      },
+                      title: {
+                        display: true,
+                        text: 'Programs by Degree Level',
+                      },
                     },
-                  },
-                  plugins: {
-                    legend: {
-                      display: false,
-                      position: 'bottom',
+                  }}
+                  bgColor={bgColor}
+                />
+              )}
+            </Grid>
+            <Grid item xs={6} md={4}>
+              {loading ? (
+                <Spinner />
+              ) : error ? (
+                <p>Error: {error.message}</p>
+              ) : (
+                <BarChart
+                  data={{
+                    labels: labels,
+                    datasets: datasets,
+                  }}
+                  options={{
+                    scales: {
+                      x: {
+                        stacked: true,
+                      },
+                      y: {
+                        stacked: true,
+                      },
                     },
-                    title: {
-                      display: true,
-                      text: 'Lorem Ipsum Dolor Sit Amet',
+                    plugins: {
+                      legend: {
+                        display: true,
+                        position: 'right',
+                      },
+                      title: {
+                        display: true,
+                        text: 'Programs by Accreditation Status',
+                      },
                     },
-                  },
-                  indexAxis: 'y',
-                }}
-              />
-            )}
+                    indexAxis: 'y',
+                  }}
+                />
+              )}
+            </Grid>
           </Grid>
-          <Grid item xs={2}>
-            {loading ? (
-              <Spinner />
-            ) : error ? (
-              <p>Error: {error.message}</p>
-            ) : (
-              <PieChart
-                data={{
-                  labels: pieData.map((data) =>
-                    data.type
-                      .split(' ')
-                      .map((word) => word[0].toUpperCase() + word.slice(1))
-                      .join('')
-                  ),
-                  datasets: [
-                    {
-                      data: pieData.map((data) => data.count),
-                      backgroundColor: bgColor,
-                    },
-                  ],
-                }}
-                options={{
-                  plugins: {
-                    legend: {
-                      display: false,
-                      position: 'top',
-                    },
-                    title: {
-                      display: true,
-                      text: 'Lorem Ipsum Dolor Sit Amet',
-                    },
-                  },
-                }}
-                bgColor={bgColor}
-              />
-            )}
-          </Grid>
-        </Grid>
+        </div>
       )}
     </div>
   );
