@@ -122,9 +122,9 @@ function ProgramOfferingPage() {
       ) : error ? (
         <p>Error: {error.message}</p>
       ) : (
-        <div>
-          <Grid container spacing={2} margin={1}>
-            <Grid item xs={12}>
+        <Grid>
+          <Grid container spacing={2}>
+            <Grid item xs={12} md={12}>
               {loading ? (
                 <Spinner />
               ) : error ? (
@@ -136,6 +136,8 @@ function ProgramOfferingPage() {
                     datasets: datasets,
                   }}
                   options={{
+                    maintainAspectRatio: false,
+                    responsive: true,
                     scales: {
                       x: {
                         stacked: false,
@@ -159,7 +161,7 @@ function ProgramOfferingPage() {
                 />
               )}
             </Grid>
-            <Grid item xs={4}>
+            <Grid item xs={12} md={6}>
               {loading ? (
                 <Spinner />
               ) : error ? (
@@ -182,6 +184,8 @@ function ProgramOfferingPage() {
                       ],
                     }}
                     options={{
+                      maintainAspectRatio: false,
+                      responsive: true,
                       plugins: {
                         legend: {
                           display: false,
@@ -198,7 +202,7 @@ function ProgramOfferingPage() {
                 </>
               )}
             </Grid>
-            <Grid item xs={8}>
+            <Grid item xs={12} md={6}>
               {loading ? (
                 <Spinner />
               ) : error ? (
@@ -216,6 +220,8 @@ function ProgramOfferingPage() {
                     ],
                   }}
                   options={{
+                    maintainAspectRatio: false,
+                    responsive: true,
                     scales: {
                       y: {
                         beginAtZero: true,
@@ -257,83 +263,7 @@ function ProgramOfferingPage() {
               </Grid>
             </Grid>
           </Grid>
-          <Grid container spacing={1} margin={1}>
-            <Grid item xs={6} md={8}>
-              {loading ? (
-                <Spinner />
-              ) : error ? (
-                <p>Error: {error.message}</p>
-              ) : (
-                <BarChart
-                  data={{
-                    labels: tableData.map((data) => data.year),
-                    datasets: [
-                      {
-                        label: 'Number of Programs',
-                        data: tableData.map((data) => data.count),
-                        backgroundColor: bgColor,
-                      },
-                    ],
-                  }}
-                  options={{
-                    scales: {
-                      y: {
-                        beginAtZero: true,
-                      },
-                    },
-                    indexAxis: 'y',
-                    plugins: {
-                      legend: {
-                        display: false,
-                        position: 'bottom',
-                      },
-                      title: {
-                        display: true,
-                        text: 'Programs by Degree Level',
-                      },
-                    },
-                  }}
-                  bgColor={bgColor}
-                />
-              )}
-            </Grid>
-            <Grid item xs={6} md={4}>
-              {loading ? (
-                <Spinner />
-              ) : error ? (
-                <p>Error: {error.message}</p>
-              ) : (
-                <BarChart
-                  data={{
-                    labels: labels,
-                    datasets: datasets,
-                  }}
-                  options={{
-                    scales: {
-                      x: {
-                        stacked: true,
-                      },
-                      y: {
-                        stacked: true,
-                      },
-                    },
-                    plugins: {
-                      legend: {
-                        display: true,
-                        position: 'right',
-                      },
-                      title: {
-                        display: true,
-                        text: 'Programs by Accreditation Status',
-                      },
-                    },
-                    indexAxis: 'y',
-                  }}
-                />
-              )}
-            </Grid>
-          </Grid>
-        </div>
+        </Grid>
       )}
     </div>
   );

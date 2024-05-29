@@ -4,7 +4,7 @@ import { LineChart, BarChart, PieChart } from '../components/Charts';
 import Spinner from '../components/Spinner';
 import Grid from '@mui/material/Grid';
 import { getQuery } from '../Queries/Queries';
-import './EnrollmentPage.css';
+import styles from './Enrollment.module.css';
 
 function EnrollmentPage() {
   const [tableData, setTableData] = useState([]);
@@ -137,8 +137,8 @@ function EnrollmentPage() {
         <p>Error:{error.message}</p>
       ) : (
         <>
-          <Grid container spacing={1} className='mb-1'>
-            <Grid item center xs={12}>
+          <Grid container spacing={2} className='mb-1'>
+            <Grid item center xs={12} md={12}>
               {/* <p className='page-label'>Total Enrollment Overtime</p> */}
               <LineChart
                 data={{
@@ -154,6 +154,8 @@ function EnrollmentPage() {
                   ],
                 }}
                 options={{
+                  maintainAspectRatio: false,
+                  responsive: true,
                   scales: {
                     x: {
                       ticks: {
@@ -182,7 +184,7 @@ function EnrollmentPage() {
                 }}
               />
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={12} md={6}>
               {/* <p className='page-label'>
                 Total Enrollment Distribution by Campus
               </p> */}
@@ -199,6 +201,8 @@ function EnrollmentPage() {
                   ],
                 }}
                 options={{
+                  maintainAspectRatio: false,
+                  responsive: true,
                   scales: {
                     x: {
                       ticks: {
@@ -227,7 +231,7 @@ function EnrollmentPage() {
                 }}
               />
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={12} md={6}>
               {/* <p className='page-label'>Year-over-Year Enrollment Growth</p> */}
               <BarChart
                 data={{
@@ -235,6 +239,8 @@ function EnrollmentPage() {
                   datasets: datasets,
                 }}
                 options={{
+                  maintainAspectRatio: false,
+                  responsive: true,
                   scales: {
                     x: {
                       stacked: false,
