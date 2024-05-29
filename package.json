@@ -27,7 +27,7 @@
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.23.1",
     "sort-by": "^0.0.2",
-    "vercel": "^34.2.3"
+    "vercel": "^32.3.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",

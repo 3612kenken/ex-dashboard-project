@@ -1,6 +1,10 @@
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || `http://localhost:4000/graphql`;
+const API_URL = import.meta.env.VITE_REACT_APP_API_URL;
+const api = axios.create({
+  baseURL: API_URL,
+  headers: { 'x-auth-token': localStorage.getItem('x-auth-token') },
+});
 
 const stringifyValue = (value, isEnum = false) => {
   if (typeof value === 'string') {
@@ -62,13 +66,13 @@ const buildMutation = (fields, mutationName, input, args = {}) => {
 };
 const getQuery = async (fields, queryName, args = {}) => {
   const query = buildQuery(fields, queryName, args);
-  const response = await axios.post(API_URL, { query });
+  const response = await api.post(API_URL, { query });
   return response.data.data[queryName];
 };
 
 const getMutation = async (fields, mutationName, input, args) => {
   const query = buildMutation(fields, mutationName, input, args);
-  const response = await axios.post(API_URL, { query });
+  const response = await api.post(API_URL, { query });
   return response.data.data[mutationName];
 };
 
