@@ -65,52 +65,49 @@ function ProgramOfferingPage() {
 
   console.log(stackedData);
 
-  const groupedData = stackedData.reduce((acc, cur) => {
-    if (!acc[cur.category]) {
-      acc[cur.category] = {};
-    }
-    if (!acc[cur.category][cur.year]) {
-      acc[cur.category][cur.year] = 0;
-    }
-    acc[cur.category][cur.year] += cur.accreditationCount;
-    return acc;
-  }, {});
+  function restructureData(data, groupKey1, groupKey2, valueKey, colorArray) {
+    const groupedData = data.reduce((acc, cur) => {
+      if (!acc[cur[groupKey1]]) {
+        acc[cur[groupKey1]] = {};
+      }
+      if (!acc[cur[groupKey1]][cur[groupKey2]]) {
+        acc[cur[groupKey1]][cur[groupKey2]] = 0;
+      }
+      acc[cur[groupKey1]][cur[groupKey2]] += cur[valueKey];
+      return acc;
+    }, {});
 
-  const datasets = Object.keys(groupedData).map((category, index) => {
-    return {
-      label: category,
-      data: Object.values(groupedData[category]),
-      backgroundColor: bgColor[index],
-    };
-  });
+    const datasets = Object.keys(groupedData).map((key, index) => {
+      return {
+        label: key,
+        data: Object.values(groupedData[key]),
+        branches: Object.keys(groupedData[key]),
+        backgroundColor: colorArray[index],
+      };
+    });
 
-  const labels = stackedData
-    .map((item) => item.year)
-    .filter((value, index, self) => self.indexOf(value) === index);
+    const labels = data
+      .map((item) => item[groupKey2])
+      .filter((value, index, self) => self.indexOf(value) === index);
 
-  // const trendData = stackedData.reduce((acc, cur) => {
-  //   if (!acc[cur.program]) {
-  //     acc[cur.program] = {};
-  //   }
-  //   if (!acc[cur.program][cur.year]) {
-  //     acc[cur.program][cur.year] = 0;
-  //   }
-  //   acc[cur.program][cur.year] += cur.enrollmentRate;
-  //   return acc;
-  // }, {});
+    return { datasets, labels };
+  }
 
-  // const trendDS = Object.keys(trendData).map((program, index) => {
-  //   return {
-  //     label: program,
-  //     data: Object.values(trendData[program]),
-  //     branches: Object.keys(trendData[program]),
-  //     backgroundColor: bgColor[index],
-  //   };
-  // });
+  const programDS = restructureData(
+    stackedData,
+    'category',
+    'year',
+    'accreditationCount',
+    bgColor
+  );
 
-  // const trendLabels = trendData
-  //   .map((item) => item.year)
-  //   .filter((value, index, self) => self.indexOf(value) === index);
+  const invertedDS = restructureData(
+    stackedData,
+    'year',
+    'category',
+    'accreditationCount',
+    bgColor
+  );
 
   return (
     <div>
@@ -124,7 +121,7 @@ function ProgramOfferingPage() {
       ) : (
         <Grid>
           <Grid container spacing={2}>
-            <Grid item xs={12} md={12}>
+            <Grid item xs={6} md={6}>
               {loading ? (
                 <Spinner />
               ) : error ? (
@@ -132,8 +129,8 @@ function ProgramOfferingPage() {
               ) : (
                 <BarChart
                   data={{
-                    labels: labels,
-                    datasets: datasets,
+                    labels: programDS.labels,
+                    datasets: programDS.datasets,
                   }}
                   options={{
                     maintainAspectRatio: false,
@@ -153,7 +150,44 @@ function ProgramOfferingPage() {
                       },
                       title: {
                         display: true,
-                        text: 'Programs by Accreditation Status',
+                        text: 'Program Accreditation Status',
+                      },
+                    },
+                    indexAxis: 'x',
+                  }}
+                />
+              )}
+            </Grid>
+            <Grid item xs={6} md={6}>
+              {loading ? (
+                <Spinner />
+              ) : error ? (
+                <p>Error: {error.message}</p>
+              ) : (
+                <BarChart
+                  data={{
+                    labels: invertedDS.labels,
+                    datasets: invertedDS.datasets,
+                  }}
+                  options={{
+                    maintainAspectRatio: false,
+                    responsive: true,
+                    scales: {
+                      x: {
+                        stacked: false,
+                      },
+                      y: {
+                        stacked: false,
+                      },
+                    },
+                    plugins: {
+                      legend: {
+                        display: true,
+                        position: 'right',
+                      },
+                      title: {
+                        display: true,
+                        text: 'Program Accreditation Status by Year',
                       },
                     },
                     indexAxis: 'x',

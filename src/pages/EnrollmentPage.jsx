@@ -80,49 +80,49 @@ function EnrollmentPage() {
     { field: 'semester', headerName: 'Semester' },
     { field: 'enrollmentRate', headerName: 'Enrollment Rate' },
   ];
+  function restructureData(data, groupKey1, groupKey2, valueKey, colorArray) {
+    const groupedData = data.reduce((acc, cur) => {
+      if (!acc[cur[groupKey1]]) {
+        acc[cur[groupKey1]] = {};
+      }
+      if (!acc[cur[groupKey1]][cur[groupKey2]]) {
+        acc[cur[groupKey1]][cur[groupKey2]] = 0;
+      }
+      acc[cur[groupKey1]][cur[groupKey2]] += cur[valueKey];
+      return acc;
+    }, {});
 
-  // const groupedData = stackedData.reduce((acc, cur) => {
-  //   if (!acc[cur.year]) {
-  //     acc[cur.year] = {};
-  //   }
-  //   if (!acc[cur.year][cur.branch]) {
-  //     acc[cur.year][cur.branch] = 0;
-  //   }
-  //   acc[cur.year][cur.branch] += cur.enrollmentRate;
-  //   return acc;
-  // }, {});
+    const datasets = Object.keys(groupedData).map((key, index) => {
+      return {
+        label: key,
+        data: Object.values(groupedData[key]),
+        branches: Object.keys(groupedData[key]),
+        backgroundColor: colorArray[index],
+      };
+    });
 
-  // const datasets = Object.keys(groupedData).map((year, index) => {
-  //   return {
-  //     label: year,
-  //     data: Object.values(groupedData[year]),
-  //     backgroundColor: bgColor[index], // bgColor is an array of colors
-  //   };
-  // });
+    const labels = data
+      .map((item) => item[groupKey2])
+      .filter((value, index, self) => self.indexOf(value) === index);
 
-  const groupedData = stackedData.reduce((acc, cur) => {
-    if (!acc[cur.year]) {
-      acc[cur.year] = {};
-    }
-    if (!acc[cur.year][cur.branch]) {
-      acc[cur.year][cur.branch] = 0;
-    }
-    acc[cur.year][cur.branch] += cur.enrollmentRate;
-    return acc;
-  }, {});
+    return { datasets, labels };
+  }
 
-  const datasets = Object.keys(groupedData).map((year, index) => {
-    return {
-      label: year,
-      data: Object.values(groupedData[year]),
-      branches: Object.keys(groupedData[year]),
-      backgroundColor: bgColor[index],
-    };
-  });
+  const enrollmentData = restructureData(
+    stackedData,
+    'year',
+    'branch',
+    'enrollmentRate',
+    bgColor
+  );
 
-  const labels = stackedData
-    .map((item) => item.branch)
-    .filter((value, index, self) => self.indexOf(value) === index);
+  const invertedDS = restructureData(
+    stackedData,
+    'branch',
+    'year',
+    'enrollmentRate',
+    bgColor
+  );
 
   return (
     <div>
@@ -138,7 +138,7 @@ function EnrollmentPage() {
       ) : (
         <>
           <Grid container spacing={2} className='mb-1'>
-            <Grid item center xs={12} md={12}>
+            <Grid item center xs={12} md={6}>
               {/* <p className='page-label'>Total Enrollment Overtime</p> */}
               <LineChart
                 data={{
@@ -188,9 +188,9 @@ function EnrollmentPage() {
               {/* <p className='page-label'>
                 Total Enrollment Distribution by Campus
               </p> */}
-              <BarChart
+              <PieChart
                 data={{
-                  labels: labels,
+                  labels: enrollmentData.labels,
                   datasets: [
                     {
                       label: 'count',
@@ -220,11 +220,11 @@ function EnrollmentPage() {
                   plugins: {
                     title: {
                       display: true,
-                      text: '    Total Enrollment Distribution by Campus',
+                      text: 'Average Enrollment Distribution by Campus',
                       position: 'bottom',
                     },
                     legend: {
-                      display: false,
+                      display: true,
                       position: 'bottom',
                     },
                   },
@@ -235,8 +235,41 @@ function EnrollmentPage() {
               {/* <p className='page-label'>Year-over-Year Enrollment Growth</p> */}
               <BarChart
                 data={{
-                  labels: labels,
-                  datasets: datasets,
+                  labels: enrollmentData.labels,
+                  datasets: enrollmentData.datasets,
+                }}
+                options={{
+                  maintainAspectRatio: false,
+                  responsive: true,
+                  scales: {
+                    x: {
+                      stacked: false,
+                    },
+                    y: {
+                      stacked: false,
+                    },
+                  },
+                  plugins: {
+                    legend: {
+                      display: true,
+                      position: 'right',
+                    },
+                    title: {
+                      display: true,
+                      text: 'Year-over-Year Enrollment Growth by Campus',
+                      position: 'bottom',
+                    },
+                  },
+                  indexAxis: 'x',
+                }}
+              />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              {/* <p className='page-label'>Year-over-Year Enrollment Growth</p> */}
+              <BarChart
+                data={{
+                  labels: invertedDS.labels,
+                  datasets: invertedDS.datasets,
                 }}
                 options={{
                   maintainAspectRatio: false,
