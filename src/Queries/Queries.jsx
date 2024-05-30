@@ -3,7 +3,10 @@ import axios from 'axios';
 const API_URL = import.meta.env.VITE_REACT_APP_API_URL;
 const api = axios.create({
   baseURL: API_URL,
-  headers: { 'x-auth-token': localStorage.getItem('x-auth-token') },
+  headers: {
+    'x-auth-token': localStorage.getItem('x-auth-token'),
+    'Content-Type': 'application/json',
+  },
 });
 
 const stringifyValue = (value, isEnum = false) => {
