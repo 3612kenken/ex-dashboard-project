@@ -1,17 +1,14 @@
-import { useState, useEffect, useMemo } from 'react';
-import Table from '../components/Table';
-import { LineChart, BarChart, PieChart } from '../components/Charts';
-import Spinner from '../components/Spinner';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import Grid from '@mui/material/Grid';
 import { getQuery } from '../Queries/Queries';
-import styles from './Enrollment.module.css';
-import MuiDrawer from '@mui/material/Drawer';
+import { BarChart, PieChart, LineChart } from '../components/Charts';
+import Spinner from '../components/Spinner';
 
 function EnrollmentPage() {
   const [tableData, setTableData] = useState([]);
   const [lineChartData, setLineChartData] = useState([]);
   const [barChartData, setBarChartData] = useState([]);
-  const [stackedData, setStackedData] = useState([]);
+  const [stackedData, setStackedData] = useState([]); // [ { program: 'BSIT', category: 'Undergraduate', accreditationCount: 5 }, ...
   const [pieData, setPieData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -30,47 +27,73 @@ function EnrollmentPage() {
     []
   );
 
-  useEffect(() => {
-    setLoading(true);
-    getQuery(
-      ['year', 'branch', 'semester', 'enrollmentRate'],
-      'getEnrollmentRates'
-    )
-      .then(setTableData)
-      .catch(setError)
-      .finally(() => setLoading(false));
-  }, []);
+  const restructureData = useCallback(
+    (data, groupKey1, groupKey2, valueKey, colorArray) => {
+      const groupedData = data.reduce((acc, cur) => {
+        if (!acc[cur[groupKey1]]) {
+          acc[cur[groupKey1]] = {};
+        }
+        if (!acc[cur[groupKey1]][cur[groupKey2]]) {
+          acc[cur[groupKey1]][cur[groupKey2]] = 0;
+        }
+        acc[cur[groupKey1]][cur[groupKey2]] += cur[valueKey];
+        return acc;
+      }, {});
+
+      const datasets = Object.keys(groupedData).map((key, index) => {
+        return {
+          label: key,
+          data: Object.values(groupedData[key]),
+          branches: Object.keys(groupedData[key]),
+          backgroundColor: colorArray[index],
+        };
+      });
+
+      const labels = data
+        .map((item) => item[groupKey2])
+        .filter((value, index, self) => self.indexOf(value) === index);
+
+      return { datasets, labels };
+    },
+    []
+  );
 
   useEffect(() => {
-    setLoading(true);
-    getQuery(['year', 'enrollmentRate'], 'getEnrollmentRates', {
-      groupBy: 'year',
-    })
-      .then(setLineChartData)
-      .catch(setError)
-      .finally(() => setLoading(false));
-  }, []);
-
-  useEffect(() => {
-    setLoading(true);
-    getQuery(['branch', 'enrollmentRate'], 'getEnrollmentRates', {
-      groupBy: 'branch',
-    })
-      .then(setBarChartData)
-      .catch(setError)
-      .finally(() => setLoading(false));
-  }, []);
-
-  useEffect(() => {
-    setLoading(true);
-    getQuery(
-      ['semester', 'branch', 'year', 'enrollmentRate'],
-      'getEnrollmentRates',
+    const queries = [
       {
-        groupBy: ['branch', 'semester', 'year'],
-      }
+        keys: ['year', 'branch', 'semester', 'enrollmentRate'],
+        name: 'getEnrollmentRates',
+        options: '',
+        setter: setTableData,
+      },
+      {
+        keys: ['year', 'enrollmentRate'],
+        name: 'getEnrollmentRates',
+        options: { groupBy: 'year' },
+        setter: setLineChartData,
+      },
+      {
+        keys: ['branch', 'enrollmentRate'],
+        name: 'getEnrollmentRates',
+        options: { groupBy: 'branch' },
+        setter: setBarChartData,
+      },
+      {
+        keys: ['semester', 'branch', 'year', 'enrollmentRate'],
+        name: 'getEnrollmentRates',
+        options: { groupBy: ['branch', 'semester', 'year'] },
+        setter: setStackedData,
+      },
+    ];
+
+    setLoading(true);
+
+    Promise.all(
+      queries.map((query) => getQuery(query.keys, query.name, query.options))
     )
-      .then(setStackedData)
+      .then((data) =>
+        data.forEach((result, index) => queries[index].setter(result))
+      )
       .catch(setError)
       .finally(() => setLoading(false));
   }, []);
@@ -81,33 +104,6 @@ function EnrollmentPage() {
     { field: 'semester', headerName: 'Semester' },
     { field: 'enrollmentRate', headerName: 'Enrollment Rate' },
   ];
-  function restructureData(data, groupKey1, groupKey2, valueKey, colorArray) {
-    const groupedData = data.reduce((acc, cur) => {
-      if (!acc[cur[groupKey1]]) {
-        acc[cur[groupKey1]] = {};
-      }
-      if (!acc[cur[groupKey1]][cur[groupKey2]]) {
-        acc[cur[groupKey1]][cur[groupKey2]] = 0;
-      }
-      acc[cur[groupKey1]][cur[groupKey2]] += cur[valueKey];
-      return acc;
-    }, {});
-
-    const datasets = Object.keys(groupedData).map((key, index) => {
-      return {
-        label: key,
-        data: Object.values(groupedData[key]),
-        branches: Object.keys(groupedData[key]),
-        backgroundColor: colorArray[index],
-      };
-    });
-
-    const labels = data
-      .map((item) => item[groupKey2])
-      .filter((value, index, self) => self.indexOf(value) === index);
-
-    return { datasets, labels };
-  }
 
   const enrollmentData = restructureData(
     stackedData,
@@ -124,6 +120,14 @@ function EnrollmentPage() {
     'enrollmentRate',
     bgColor
   );
+
+  if (loading) {
+    return <Spinner />;
+  }
+
+  if (error) {
+    return <p>Error: {error.message}</p>;
+  }
 
   return (
     <div>

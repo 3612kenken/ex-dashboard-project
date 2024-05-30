@@ -1,9 +1,8 @@
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import Grid from '@mui/material/Grid';
 import { getQuery } from '../Queries/Queries';
-import { useEffect, useState, useMemo } from 'react';
-import { BarChart, PieChart, LineChart } from '../components/Charts';
+import { BarChart, PieChart } from '../components/Charts';
 import Spinner from '../components/Spinner';
-import { plugins, scales } from 'chart.js';
 import { BorderColor } from '@mui/icons-material';
 
 function ProgramOfferingPage() {
@@ -28,42 +27,6 @@ function ProgramOfferingPage() {
     ],
     []
   );
-
-  useEffect(() => {
-    setLoading(true);
-    getQuery(['year', 'count'], 'getProgramOfferingsProfile', {
-      groupBy: 'year',
-    })
-      .then(setTableData)
-      .catch(setError)
-      .finally(() => setLoading(false));
-  }, []);
-
-  useEffect(() => {
-    setLoading(true);
-    getQuery(['type', 'count'], 'getProgramOfferingsProfile', {
-      groupBy: 'type',
-    })
-      .then(setPieData)
-      .catch(setError)
-      .finally(() => setLoading(false));
-  }, []);
-
-  useEffect(() => {
-    setLoading(true);
-    getQuery(
-      ['program', 'category', 'year', 'accreditationCount'],
-      'getAccreditationProfile',
-      {
-        groupBy: ['program', 'category', 'year'],
-      }
-    )
-      .then(setStackedData)
-      .catch(setError)
-      .finally(() => setLoading(false));
-  }, []);
-
-  console.log(stackedData);
 
   function restructureData(data, groupKey1, groupKey2, valueKey, colorArray) {
     const groupedData = data.reduce((acc, cur) => {
@@ -93,6 +56,40 @@ function ProgramOfferingPage() {
     return { datasets, labels };
   }
 
+  useEffect(() => {
+    const queries = [
+      {
+        keys: ['year', 'count'],
+        name: 'getProgramOfferingsProfile',
+        options: { groupBy: 'year' },
+        setter: setTableData,
+      },
+      {
+        keys: ['type', 'count'],
+        name: 'getProgramOfferingsProfile',
+        options: { groupBy: 'type' },
+        setter: setPieData,
+      },
+      {
+        keys: ['program', 'category', 'year', 'accreditationCount'],
+        name: 'getAccreditationProfile',
+        options: { groupBy: ['program', 'category', 'year'] },
+        setter: setStackedData,
+      },
+    ];
+
+    setLoading(true);
+
+    Promise.all(
+      queries.map((query) => getQuery(query.keys, query.name, query.options))
+    )
+      .then((data) =>
+        data.forEach((result, index) => queries[index].setter(result))
+      )
+      .catch(setError)
+      .finally(() => setLoading(false));
+  }, []);
+
   const programDS = restructureData(
     stackedData,
     'category',
@@ -108,6 +105,14 @@ function ProgramOfferingPage() {
     'accreditationCount',
     bgColor
   );
+
+  if (loading) {
+    return <Spinner />;
+  }
+
+  if (error) {
+    return <p>Error: {error.message}</p>;
+  }
 
   return (
     <div>
