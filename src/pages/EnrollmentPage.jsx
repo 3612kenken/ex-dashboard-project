@@ -5,6 +5,7 @@ import Spinner from '../components/Spinner';
 import Grid from '@mui/material/Grid';
 import { getQuery } from '../Queries/Queries';
 import styles from './Enrollment.module.css';
+import MuiDrawer from '@mui/material/Drawer';
 
 function EnrollmentPage() {
   const [tableData, setTableData] = useState([]);
@@ -137,8 +138,8 @@ function EnrollmentPage() {
         <p>Error:{error.message}</p>
       ) : (
         <>
-          <Grid container spacing={2} className='mb-1'>
-            <Grid item center xs={12} md={6}>
+          <Grid container spacing={1} className='mb-1'>
+            <Grid item xs={12} md={8} lg={9}>
               {/* <p className='page-label'>Total Enrollment Overtime</p> */}
               <LineChart
                 data={{
@@ -184,7 +185,7 @@ function EnrollmentPage() {
                 }}
               />
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={4} lg={3}>
               {/* <p className='page-label'>
                 Total Enrollment Distribution by Campus
               </p> */}
@@ -231,7 +232,7 @@ function EnrollmentPage() {
                 }}
               />
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={4} lg={6}>
               {/* <p className='page-label'>Year-over-Year Enrollment Growth</p> */}
               <BarChart
                 data={{
@@ -264,7 +265,7 @@ function EnrollmentPage() {
                 }}
               />
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={8} lg={6}>
               {/* <p className='page-label'>Year-over-Year Enrollment Growth</p> */}
               <BarChart
                 data={{
@@ -297,9 +298,6 @@ function EnrollmentPage() {
                 }}
               />
             </Grid>
-            {/* <Grid xs={12} className='mb-1'>
-                <Table data={tableData} columns={columns} />
-              </Grid> */}
           </Grid>
 
           {/* <h3 className='page-subtitle '>

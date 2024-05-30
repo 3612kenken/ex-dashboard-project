@@ -8,6 +8,7 @@ export function LineChart({ data, options, styles }) {
       options={options}
       type='line'
       className={`chart-container ${styles}`}
+      style={{ width: '100%', flexGrow: 1, overflow: 'hidden' }}
     />
   );
 }
@@ -19,6 +20,7 @@ export function BarChart({ data, options, styles }) {
       options={options}
       type='bar'
       className={`chart-container ${styles}`}
+      style={{ width: '100%', flexGrow: 1, overflow: 'hidden' }}
     />
   );
 }
@@ -30,6 +32,7 @@ export function PieChart({ data, options, styles }) {
       options={options}
       type='pie'
       className={`chart-container ${styles}`}
+      style={{ width: '100%', flexGrow: 1, overflow: 'hidden' }}
     />
   );
 }
