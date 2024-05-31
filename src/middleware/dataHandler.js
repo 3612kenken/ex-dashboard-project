@@ -1,5 +1,3 @@
-import { useCallback } from 'react';
-
 const dataHandler = (data, groupKey1, groupKey2, valueKey, colorArray) => {
   const groupedData = data.reduce((acc, cur) => {
     if (!acc[cur[groupKey1]]) {
