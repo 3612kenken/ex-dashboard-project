@@ -4,9 +4,11 @@ import { LineChart, BarChart, PieChart } from '../components/Charts';
 import Spinner from '../components/Spinner';
 import Grid from '@mui/material/Grid';
 import { getQuery } from '../Queries/Queries';
-import styles from './Enrollment.module.css';
+import styles from './Graduates.module.css';
 
-function EnrollmentPage() {
+import React from 'react'
+
+function GraduatesPage () {
   const [tableData, setTableData] = useState([]);
   const [lineChartData, setLineChartData] = useState([]);
   const [barChartData, setBarChartData] = useState([]);
@@ -17,14 +19,14 @@ function EnrollmentPage() {
 
   const bgColor = useMemo(
     () => [
-      '#003f5c',
-      '#2f4b7c',
-      '#665191',
-      '#a05195',
-      '#d45087',
-      '#f95d6a',
-      '#ff7c43',
-      '#ffa600',
+      '#b3cc09',
+      '#47a9ba',
+      '#a031f3',
+      '#d21fc4',
+      '#28adbb',
+      '#ec1348',
+      '#54f02e',
+      '#6d98d5',
     ],
     []
   );
@@ -32,8 +34,8 @@ function EnrollmentPage() {
   useEffect(() => {
     setLoading(true);
     getQuery(
-      ['year', 'branch', 'semester', 'enrollmentRate'],
-      'getEnrollmentRates'
+      ['year', 'branch', 'graduateCount'],
+      'getGraduationRates'
     )
       .then(setTableData)
       .catch(setError)
@@ -42,7 +44,7 @@ function EnrollmentPage() {
 
   useEffect(() => {
     setLoading(true);
-    getQuery(['year', 'enrollmentRate'], 'getEnrollmentRates', {
+    getQuery(['year', 'graduateCount'], 'getGraduationRates', {
       groupBy: 'year',
     })
       .then(setLineChartData)
@@ -52,7 +54,7 @@ function EnrollmentPage() {
 
   useEffect(() => {
     setLoading(true);
-    getQuery(['branch', 'enrollmentRate'], 'getEnrollmentRates', {
+    getQuery(['branch', 'graduateCount'], 'getGraduationRates', {
       groupBy: 'branch',
     })
       .then(setBarChartData)
@@ -63,10 +65,10 @@ function EnrollmentPage() {
   useEffect(() => {
     setLoading(true);
     getQuery(
-      ['semester', 'branch', 'year', 'enrollmentRate'],
-      'getEnrollmentRates',
+      ['year', 'branch', 'graduateCount'],
+      'getGraduationRates',
       {
-        groupBy: ['branch', 'semester', 'year'],
+        groupBy: ['branch', 'graduateCount', 'year'],
       }
     )
       .then(setStackedData)
@@ -77,10 +79,9 @@ function EnrollmentPage() {
   const columns = [
     { field: 'year', headerName: 'Year' },
     { field: 'branch', headerName: 'Branch' },
-    { field: 'semester', headerName: 'Semester' },
-    { field: 'enrollmentRate', headerName: 'Enrollment Rate' },
+    { field: 'graduateCount', headerName: 'Graduate Count' },
   ];
-  
+
   function restructureData(data, groupKey1, groupKey2, valueKey, colorArray) {
     const groupedData = data.reduce((acc, cur) => {
       if (!acc[cur[groupKey1]]) {
@@ -108,12 +109,12 @@ function EnrollmentPage() {
 
     return { datasets, labels };
   }
-
-  const enrollmentData = restructureData(
+  
+  const graduatesData = restructureData(
     stackedData,
     'year',
     'branch',
-    'enrollmentRate',
+    'graduateCount',
     bgColor
   );
 
@@ -121,15 +122,15 @@ function EnrollmentPage() {
     stackedData,
     'branch',
     'year',
-    'enrollmentRate',
+    'graduateCount',
     bgColor
   );
-  console.log(invertedDS);
+
 
   return (
     <div>
       <h2 className='page-title '>
-        Enrollment <span className='text-gradient'> Profile</span>
+        Graduates <span className='text-gradient'> Profile</span>
       </h2>
       {loading ? (
         <>
@@ -147,7 +148,7 @@ function EnrollmentPage() {
                   labels: lineChartData.map((item) => item.year),
                   datasets: [
                     {
-                      data: lineChartData.map((item) => item.enrollmentRate),
+                      data: lineChartData.map((item) => item.graduateCount),
                       fill: false,
                       backgroundColor: '#ffa600',
                       borderColor: 'rgba(255, 99, 132, 0.2)',
@@ -174,7 +175,7 @@ function EnrollmentPage() {
                   plugins: {
                     title: {
                       display: true,
-                      text: 'Total Enrollment Overtime',
+                      text: 'Total Graduates Overtime',
                       position: 'bottom',
                       color: 'black',
                     },
@@ -192,11 +193,11 @@ function EnrollmentPage() {
               </p> */}
               <PieChart
                 data={{
-                  labels: enrollmentData.labels,
+                  labels: graduatesData.labels,
                   datasets: [
                     {
                       label: 'count',
-                      data: barChartData.map((item) => item.enrollmentRate),
+                      data: barChartData.map((item) => item.graduateCount),
                       fill: false,
                       backgroundColor: bgColor,
                     },
@@ -222,7 +223,7 @@ function EnrollmentPage() {
                   plugins: {
                     title: {
                       display: true,
-                      text: 'Average Enrollment Distribution by Campus',
+                      text: 'Average Graduates Distribution by Campus',
                       position: 'bottom',
                     },
                     legend: {
@@ -237,8 +238,8 @@ function EnrollmentPage() {
               {/* <p className='page-label'>Year-over-Year Enrollment Growth</p> */}
               <BarChart
                 data={{
-                  labels: enrollmentData.labels,
-                  datasets: enrollmentData.datasets,
+                  labels: graduatesData.labels,
+                  datasets: graduatesData.datasets,
                 }}
                 options={{
                   maintainAspectRatio: false,
@@ -258,7 +259,7 @@ function EnrollmentPage() {
                     },
                     title: {
                       display: true,
-                      text: 'Year-over-Year Enrollment Growth by Campus',
+                      text: 'Year-over-Year Graduates Growth by Campus',
                       position: 'bottom',
                     },
                   },
@@ -266,39 +267,7 @@ function EnrollmentPage() {
                 }}
               />
             </Grid>
-            <Grid item xs={12} md={6}>
-              {/* <p className='page-label'>Year-over-Year Enrollment Growth</p> */}
-              <BarChart
-                data={{
-                  labels: invertedDS.labels,
-                  datasets: invertedDS.datasets,
-                }}
-                options={{
-                  maintainAspectRatio: false,
-                  responsive: true,
-                  scales: {
-                    x: {
-                      stacked: false,
-                    },
-                    y: {
-                      stacked: false,
-                    },
-                  },
-                  plugins: {
-                    legend: {
-                      display: true,
-                      position: 'right',
-                    },
-                    title: {
-                      display: true,
-                      text: 'Year-over-Year Enrollment Growth',
-                      position: 'bottom',
-                    },
-                  },
-                  indexAxis: 'x',
-                }}
-              />
-            </Grid>
+        
             {/* <Grid xs={12} className='mb-1'>
                 <Table data={tableData} columns={columns} />
               </Grid> */}
@@ -311,6 +280,7 @@ function EnrollmentPage() {
       )}
     </div>
   );
+
 }
 
-export default EnrollmentPage;
+export default GraduatesPage
